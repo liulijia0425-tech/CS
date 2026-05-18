@@ -774,8 +774,10 @@ function getGreeting(){
 function updateGreet(){
   const name=getNickname();
   const sub=document.getElementById('greetSub');
-  if(name) sub.textContent=`${getGreeting()}呀 ${name}`;
-  else sub.textContent='华商报销助手';
+  if(!name){sub.textContent='华商报销助手';return;}
+  const isLin=['黄琳','lin','Lin','橘子'].includes(name);
+  if(isLin) sub.textContent=`${getGreeting()}呀 ${name} 🍊`;
+  else sub.textContent=`${getGreeting()}呀 ${name}`;
 }
 function saveNickname(){
   const val=document.getElementById('nicknameInput').value.trim();
@@ -783,15 +785,20 @@ function saveNickname(){
   localStorage.setItem('cs_nickname',val);
   const ov=document.getElementById('welcomeOv');
 
+  const isLin=['黄琳','lin','Lin','橘子'].includes(val);
   const randomGreet='报销制度烦死了，但钱要回来才是正经事 💸';
 
-  // Show GAGA message before closing
   document.getElementById('welcomeOv').innerHTML=`
-    <div class="welcome-card" style="animation:popIn 0.4s cubic-bezier(0.34,1.4,0.64,1)">
-      <div style="font-size:56px;margin-bottom:16px">🦆</div>
-      <div style="font-size:20px;font-weight:800;color:var(--text);margin-bottom:10px">早就听 GAGA 提起过你了！</div>
-      <div style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:24px">${randomGreet}</div>
-      <button class="welcome-btn" onclick="dismissWelcome()">开始用吧 🦆</button>
+    <div class="welcome-card" style="animation:popIn 0.4s cubic-bezier(0.34,1.4,0.64,1)${isLin?';border-color:#FF8C00;box-shadow:0 16px 48px rgba(255,140,0,0.25)':''}">
+      <div style="font-size:56px;margin-bottom:16px;animation:wobble 2s ease-in-out infinite">${isLin?'🍊':'🦆'}</div>
+      <div style="font-size:20px;font-weight:800;color:${isLin?'#E65100':'var(--text)'};margin-bottom:10px">早就听 GAGA 提起过你了！</div>
+      ${isLin?`
+        <div style="font-size:13px;color:#FF8C00;font-weight:700;margin-bottom:6px;letter-spacing:0.5px">🍊 橘子专属版 🍊</div>
+        <div style="font-size:14px;color:#A1887F;line-height:1.7;margin-bottom:24px">甜甜的橘子，就像你一样 🍊<br>${randomGreet}</div>
+      `:`
+        <div style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:24px">${randomGreet}</div>
+      `}
+      <button class="welcome-btn" style="${isLin?'background:linear-gradient(135deg,#FF8C00,#FF6D00);':''}" onclick="dismissWelcome()">开始用吧 ${isLin?'🍊':'🦆'}</button>
     </div>`;
   updateGreet();
 }

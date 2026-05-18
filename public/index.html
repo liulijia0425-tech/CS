@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -12,32 +13,53 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#FFFBEF;--s1:#FFFFFF;--s2:#FFF8DC;--s3:#FFF3C0;--border:#FFE082;
-  --text:#5D4037;--muted:#A1887F;--accent:#FFD600;--accent2:#FFAB00;
-  --accent-glow:rgba(255,214,0,0.25);--blue:#29B6F6;--danger:#EF5350;
-  --mono:'JetBrains Mono',monospace;--font:'Sora',sans-serif;
+  --bg:#FFFBEF;
+  --s1:#FFFFFF;
+  --s2:#FFF8DC;
+  --s3:#FFF3C0;
+  --border:#FFE082;
+  --text:#5D4037;
+  --muted:#A1887F;
+  --accent:#FFD600;
+  --accent2:#FFAB00;
+  --accent-glow:rgba(255,214,0,0.25);
+  --blue:#29B6F6;
+  --danger:#EF5350;
+  --duck:#FFD600;
+  --mono:'JetBrains Mono',monospace;
+  --font:'Sora',sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font)}
-#app{display:flex;flex-direction:column;height:100dvh;max-width:430px;margin:0 auto;position:relative}
-.hdr{padding:calc(env(safe-area-inset-top,0px)+14px) 18px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--bg)}
+#app{display:flex;flex-direction:column;height:100dvh;max-width:430px;margin:0 auto;position:relative;padding:0 12px}
+
+/* Header */
+.hdr{padding-top:max(env(safe-area-inset-top,0px),20px);padding-bottom:12px;padding-left:18px;padding-right:18px;display:flex;flex-direction:column;flex-shrink:0;background:var(--bg)}
 .brand{display:flex;align-items:center;gap:9px}
-.logo{width:36px;height:36px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 2px 8px rgba(255,214,0,0.4)}
+.logo{width:36px;height:36px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 2px 8px rgba(255,214,0,0.4);animation:wobble 2s ease-in-out infinite}
 .brand-text{font-size:17px;font-weight:800;letter-spacing:-0.5px;color:var(--text)}
 .brand-text span{color:var(--accent2)}
 .brand-sub{font-size:12px;color:var(--muted);font-family:var(--mono)}
-.mnav{display:flex;align-items:center;gap:6px}
-.mnav button{background:var(--s2);border:2px solid var(--border);color:var(--accent2);width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;font-weight:700;transition:all 0.12s}
-.mnav button:active{background:var(--border);transform:scale(0.92)}
-.mnav span{font-size:13px;font-weight:700;color:var(--text);min-width:72px;text-align:center;background:var(--s2);border:2px solid var(--border);border-radius:10px;padding:4px 8px;cursor:pointer;transition:all 0.12s}
-.mnav span:active{background:var(--border)}
-.sum{margin:4px 16px 14px;background:linear-gradient(135deg,#FFD600,#FFAB00);border-radius:20px;padding:16px 18px;display:flex;align-items:center;flex-shrink:0;position:relative;overflow:hidden;box-shadow:0 4px 16px rgba(255,171,0,0.35)}
+.icon-btn{background:var(--s1);border:2px solid var(--border);border-radius:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;box-shadow:0 2px 6px rgba(0,0,0,0.06)}
+.icon-btn:active{background:var(--s3);transform:scale(0.95)}
+
+/* Summary */
+.sum{margin:4px 0 14px;background:linear-gradient(135deg,#FFD600,#FFAB00);border-radius:20px;padding:16px 18px;display:flex;align-items:center;flex-shrink:0;position:relative;overflow:hidden;box-shadow:0 4px 16px rgba(255,171,0,0.35)}
 .sum::before{content:'🦆';position:absolute;right:-8px;bottom:-10px;font-size:64px;opacity:0.15;transform:rotate(-10deg)}
 .sum-main{flex:1;min-width:0}
 .sum-label{font-size:10px;color:rgba(93,64,55,0.7);text-transform:uppercase;letter-spacing:1px;font-weight:700}
 .sum-amt{font-family:var(--mono);font-size:28px;font-weight:700;color:#5D4037;margin-top:3px;letter-spacing:-1px}
 .sum-n{font-size:11px;color:rgba(93,64,55,0.6);margin-top:2px}
-.list{flex:1;overflow-y:auto;padding:0 16px 110px;-webkit-overflow-scrolling:touch}
+.sum-right{text-align:right;flex-shrink:0}
+.mnav{display:flex;align-items:center;gap:6px}
+.mnav button{background:var(--s2);border:2px solid var(--border);color:var(--accent2);width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;font-weight:700;transition:all 0.12s}
+.mnav button:active{background:var(--border);transform:scale(0.92)}
+.mnav span{font-size:13px;font-weight:700;color:var(--text);min-width:72px;text-align:center;background:var(--s2);border:2px solid var(--border);border-radius:10px;padding:4px 8px;cursor:pointer;transition:all 0.12s}
+.mnav span:active{background:var(--border)}
+.exp-link{font-size:11px;color:#5D4037;cursor:pointer;text-decoration:underline;text-underline-offset:2px;font-weight:600;opacity:0.8}
+
+/* List */
+.list{flex:1;overflow-y:auto;padding:0 4px 110px;-webkit-overflow-scrolling:touch}
 .list::-webkit-scrollbar{width:3px}
 .list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 .day-hdr{font-size:11px;color:var(--muted);font-weight:600;padding:12px 0 6px;display:flex;justify-content:space-between}
@@ -58,12 +80,16 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .empty-icon{font-size:64px;animation:wobble 2s ease-in-out infinite}
 @keyframes wobble{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
 .empty p{font-size:13px;text-align:center;line-height:1.8;color:var(--muted)}
-.fab-wrap{position:absolute;bottom:0;left:0;right:0;padding:10px 16px calc(14px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,var(--bg) 50%)}
+
+/* FAB */
+.fab-wrap{position:absolute;bottom:0;left:-12px;right:-12px;padding:10px 28px calc(14px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,var(--bg) 50%)}
 .fab-row{display:grid;grid-template-columns:3fr 1fr;gap:10px}
-.fab{border:none;border-radius:18px;font-family:var(--font);font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.fab{border:none;border-radius:18px;padding:15px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all 0.15s}
 .fab:active{transform:scale(0.97)}
-.fab-primary{background:linear-gradient(135deg,#FFD600,#FFAB00);color:#5D4037;box-shadow:0 6px 20px rgba(255,171,0,0.4);font-size:13px;padding:15px}
+.fab-primary{background:linear-gradient(135deg,#FFD600,#FFAB00);color:#5D4037;box-shadow:0 6px 20px rgba(255,171,0,0.4);font-size:13px;padding:13px}
 .fab-secondary{background:var(--s1);color:var(--text);border:2px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,0.06);font-size:18px;padding:10px 8px;flex-direction:column;gap:3px;line-height:1.2}
+
+/* Month Picker */
 .mpicker-ov{position:fixed;inset:0;background:rgba(93,64,55,0.3);backdrop-filter:blur(4px);z-index:300;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s}
 .mpicker-ov.open{opacity:1;pointer-events:all}
 .mpicker{background:var(--s1);border-radius:24px;padding:24px 20px;width:300px;border:3px solid var(--border);box-shadow:0 16px 48px rgba(0,0,0,0.12)}
@@ -78,13 +104,24 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .mpicker-m.active{background:var(--accent);border-color:var(--accent2);color:#5D4037}
 .mpicker-m.has-data{border-color:var(--accent2)}
 .mpicker-cancel{width:100%;padding:12px;background:var(--s2);border:2px solid var(--border);border-radius:12px;font-family:var(--font);font-size:14px;font-weight:600;color:var(--muted);cursor:pointer}
-.ov{position:fixed;inset:0;background:rgba(255,248,225,0.85);backdrop-filter:blur(8px);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;opacity:0;pointer-events:none;transition:opacity 0.2s}
+
+/* Overlays */
+.ov{position:fixed;inset:0;background:rgba(255,248,225,0.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;opacity:0;pointer-events:none;transition:opacity 0.28s cubic-bezier(0.4,0,0.2,1)}
 .ov.open{opacity:1;pointer-events:all}
-.sov{position:fixed;inset:0;background:rgba(93,64,55,0.3);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s}
+.sov{position:fixed;inset:0;background:rgba(93,64,55,0.25);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s cubic-bezier(0.4,0,0.2,1)}
 .sov.open{opacity:1;pointer-events:all}
-.sheet{background:var(--s1);border-radius:28px 28px 0 0;padding:20px 18px calc(28px + env(safe-area-inset-bottom,0px));width:100%;max-width:430px;transform:translateY(100%);transition:transform 0.32s cubic-bezier(0.34,1.2,0.64,1);overflow-y:auto;max-height:92dvh;border-top:3px solid var(--border)}
+.sheet{background:var(--s1);border-radius:28px 28px 0 0;padding:20px 20px calc(32px + env(safe-area-inset-bottom,0px));width:100%;max-width:430px;transform:translateY(100%);transition:transform 0.42s cubic-bezier(0.32,0.72,0,1);overflow-y:auto;max-height:92dvh;border-top:2px solid var(--border);box-shadow:0 -8px 40px rgba(93,64,55,0.12)}
 .sov.open .sheet{transform:translateY(0)}
-.handle{width:40px;height:5px;background:var(--border);border-radius:3px;margin:0 auto 20px}
+.handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px;opacity:0.6}
+
+/* Image Lightbox */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:900;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.28s cubic-bezier(0.4,0,0.2,1)}
+.lightbox.open{opacity:1;pointer-events:all}
+.lightbox img{max-width:95vw;max-height:90vh;object-fit:contain;border-radius:16px;transform:scale(0.88);transition:transform 0.38s cubic-bezier(0.34,1.4,0.64,1);box-shadow:0 24px 80px rgba(0,0,0,0.6)}
+.lightbox.open img{transform:scale(1)}
+.lightbox-close{position:absolute;top:20px;right:20px;width:36px;height:36px;background:rgba(255,255,255,0.15);border:none;border-radius:50%;color:white;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+
+/* Scan */
 .scan-box{width:260px;height:320px;border:3px solid var(--accent);border-radius:20px;overflow:hidden;background:var(--s1);position:relative;box-shadow:0 8px 24px rgba(255,171,0,0.3)}
 .scan-box img{width:100%;height:100%;object-fit:contain;position:relative;z-index:1}
 .scan-line{position:absolute;width:90%;height:3px;background:linear-gradient(90deg,transparent,var(--accent),transparent);animation:scanLine 2s ease-in-out infinite;left:5%;z-index:2;border-radius:2px}
@@ -96,10 +133,14 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .sb.p{background:linear-gradient(135deg,#FFD600,#FFAB00);color:#5D4037}
 .sb.s{background:var(--s1);color:var(--muted);border:2px solid var(--border)}
 .sb:active{transform:scale(0.95)}
+
+/* AI */
 .spinner{width:60px;height:60px;border-radius:50%;border:4px solid var(--border);border-top-color:var(--accent2);animation:spin 0.8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .ai-msg{font-size:13px;color:var(--text);text-align:center;line-height:1.7;max-width:220px;background:var(--s1);border-radius:16px;padding:14px 18px;border:2px solid var(--border)}
 .ai-msg b{color:var(--accent2);display:block;font-size:15px;margin-bottom:4px}
+
+/* Result */
 .r-thumb-wrap{display:flex;justify-content:center;margin-bottom:16px;position:relative}
 .r-thumb{width:110px;height:72px;object-fit:cover;border-radius:14px;border:3px solid var(--border)}
 .r-badge{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#FFD600,#FFAB00);color:#5D4037;font-size:10px;font-weight:700;padding:3px 12px;border-radius:20px;white-space:nowrap;box-shadow:0 2px 8px rgba(255,171,0,0.3)}
@@ -119,7 +160,10 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .rb.ok{background:linear-gradient(135deg,#FFD600,#FFAB00);color:#5D4037}
 .rb.no{background:var(--s2);color:var(--muted);border:2px solid var(--border)}
 .rb:active{transform:scale(0.96)}
-.det-img{width:100%;height:150px;border-radius:16px;overflow:hidden;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:40px;margin-bottom:14px;border:2px solid var(--border)}
+
+/* Detail */
+.det-img{width:100%;height:180px;border-radius:18px;overflow:hidden;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:40px;margin-bottom:14px;border:2px solid var(--border);cursor:pointer;transition:transform 0.18s cubic-bezier(0.34,1.4,0.64,1)}
+.det-img:active{transform:scale(0.97)}
 .det-img img{width:100%;height:100%;object-fit:cover}
 .det-rows{background:var(--s2);border-radius:16px;padding:4px 0;margin-bottom:14px;border:2px solid var(--border)}
 .det-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 16px;border-bottom:1px solid var(--border)}
@@ -131,6 +175,8 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .db.del{background:rgba(239,83,80,0.1);color:var(--danger);border:2px solid rgba(239,83,80,0.3)}
 .db.cls{background:var(--s2);color:var(--text);border:2px solid var(--border)}
 .db:active{transform:scale(0.95)}
+
+/* Export */
 .exp-title{font-size:18px;font-weight:800;margin-bottom:2px;color:var(--text)}
 .exp-sub{font-size:11px;color:var(--muted);margin-bottom:16px}
 .exp-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
@@ -147,22 +193,55 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .eb.excel{background:linear-gradient(135deg,#FFD600,#FFAB00);color:#5D4037;box-shadow:0 4px 12px rgba(255,171,0,0.3)}
 .eb.copy{background:var(--s2);color:var(--text);border:2px solid var(--border)}
 .eb:active{transform:scale(0.96)}
+
+/* Toast */
 .toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--s1);border:2px solid var(--border);border-radius:14px;padding:10px 18px;font-size:13px;font-weight:600;opacity:0;transition:all 0.24s;z-index:999;white-space:nowrap;pointer-events:none;max-width:calc(100vw - 32px);text-align:center;color:var(--text);box-shadow:0 4px 16px rgba(0,0,0,0.1)}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 @keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* Welcome */
+.welcome-ov{position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;align-items:center;justify-content:center;padding:32px;transition:opacity 0.4s cubic-bezier(0.4,0,0.2,1)}
+.welcome-ov.hide{opacity:0;pointer-events:none}
+.welcome-card{background:var(--s1);border-radius:28px;padding:36px 28px;width:100%;max-width:340px;text-align:center;border:2px solid var(--border);box-shadow:0 16px 48px rgba(255,171,0,0.2)}
+.welcome-input{width:100%;background:var(--s2);border:2px solid var(--border);border-radius:14px;padding:14px 16px;font-family:var(--font);font-size:16px;font-weight:600;color:var(--text);outline:none;text-align:center;margin-bottom:14px;transition:border-color 0.15s}
+.welcome-input:focus{border-color:var(--accent2)}
+.welcome-btn{width:100%;background:linear-gradient(135deg,#FFD600,#FFAB00);color:#5D4037;border:none;border-radius:14px;padding:15px;font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;transition:all 0.15s;box-shadow:0 4px 16px rgba(255,171,0,0.35)}
+.welcome-btn:active{transform:scale(0.97)}
+@keyframes popIn{from{opacity:0;transform:scale(0.85)}to{opacity:1;transform:scale(1)}}
+
+/* Settings */
+.set-section{margin-bottom:20px}
+.set-label{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;padding-left:2px}
+.set-group{background:var(--s2);border-radius:16px;border:2px solid var(--border);overflow:hidden}
+.set-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.12s}
+.set-row:last-child{border:none}
+.set-row:active{background:var(--s3)}
+.set-row-l{display:flex;align-items:center;gap:10px}
+.set-icon{font-size:18px;width:28px;text-align:center}
+.set-name{font-size:14px;font-weight:600;color:var(--text)}
+.set-val{font-size:12px;color:var(--muted);font-weight:500}
+.set-arrow{color:var(--muted);font-size:14px}
+.set-danger .set-name{color:var(--danger)}
+.nickname-edit{display:flex;gap:8px;margin-bottom:14px}
+.nickname-edit input{flex:1;background:var(--s2);border:2px solid var(--border);border-radius:10px;padding:10px 14px;font-family:var(--font);font-size:14px;color:var(--text);outline:none}
+.nickname-edit input:focus{border-color:var(--accent2)}
+.nickname-edit button{background:linear-gradient(135deg,#FFD600,#FFAB00);color:#5D4037;border:none;border-radius:10px;padding:10px 16px;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer}
 </style>
 </head>
 <body>
 <div id="app">
   <div class="hdr">
-    <div class="brand">
-      <div class="logo">🦆</div>
-      <div>
-        <div class="brand-text">Claim<span>Snap</span></div>
-        <div class="brand-sub">华商报销助手</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:10px">
+      <div class="brand">
+        <div class="logo">🦆</div>
+        <div>
+          <div class="brand-text">Claim<span>Snap</span></div>
+          <div class="brand-sub" id="greetSub">华商报销助手</div>
+        </div>
       </div>
+      <div class="icon-btn" onclick="openSettings()" title="设置">⚙️</div>
     </div>
-    <div class="mnav">
+    <div class="mnav" style="justify-content:center;width:100%">
       <button onclick="changeMonth(-1)">‹</button>
       <span id="mLabel" onclick="openMonthPicker()" title="点击选择月份"></span>
       <button onclick="changeMonth(1)">›</button>
@@ -188,7 +267,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
       <button class="fab fab-secondary" onclick="openExport()">📋<br><span style="font-size:11px;font-weight:700">报销导出</span></button>
     </div>
   </div>
-</div>
 
 <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFile(event)">
 
@@ -217,7 +295,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
       <div class="r-badge">✨ AI 识别完成</div>
     </div>
     <div class="r-cat"><span id="rIcon" style="font-size:24px"></span><span id="rCatName" style="font-size:12px;color:var(--muted);font-weight:600"></span></div>
-    <div class="r-amount" id="rAmt">$0.00</div>
+    <div class="r-amount" id="rAmt">S$0.00</div>
     <div class="r-merchant" id="rMerchant"></div>
     <div class="r-reason" id="rReason"></div>
     <div class="r-grid">
@@ -242,11 +320,36 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 <div class="sov" id="detailOv" onclick="closeDetOv(event)">
   <div class="sheet" id="detailSheet"></div>
 </div>
+
 <div class="sov" id="expOv" onclick="closeExpOv(event)">
   <div class="sheet" id="expSheet"></div>
 </div>
+
 <div class="toast" id="toast"></div>
 
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightboxImg" src="" alt="">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+</div>
+
+<!-- Welcome / Onboarding -->
+<div class="welcome-ov" id="welcomeOv">
+  <div class="welcome-card">
+    <div style="font-size:56px;margin-bottom:12px;animation:wobble 2s ease-in-out infinite">🦆</div>
+    <div style="font-size:22px;font-weight:800;color:var(--text);margin-bottom:6px">你好呀！</div>
+    <div style="font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.6">我是 ClaimSnap 🦆<br>你的华商报销小助手<br>我该怎么称呼你呢？</div>
+    <input id="nicknameInput" class="welcome-input" type="text" placeholder="输入你的昵称…" maxlength="10" onkeydown="if(event.key==='Enter')saveNickname()">
+    <button class="welcome-btn" onclick="saveNickname()">出发吧 🦆</button>
+  </div>
+</div>
+
+<!-- Settings -->
+<div class="sov" id="settingsOv" onclick="closeSettings(event)">
+  <div class="sheet" id="settingsSheet"></div>
+</div>
+
+<!-- Month Picker -->
 <div class="mpicker-ov" id="mpickerOv" onclick="closeMonthPicker(event)">
   <div class="mpicker">
     <div class="mpicker-title">🦆 选择月份</div>
@@ -282,15 +385,21 @@ const CATS=[
   {emoji:'🚕',en:'Travel - National',zh:'国内交通'},
   {emoji:'✈️',en:'Travel - International',zh:'国际出行'},
 ];
-document.getElementById('rCatSel').innerHTML=CATS.map(c=>`<option value="${c.en}">${c.emoji} ${c.zh}</option>`).join('');
+
+document.getElementById('rCatSel').innerHTML=CATS.map(c=>
+  `<option value="${c.en}">${c.emoji} ${c.zh}</option>`
+).join('');
+
 let entries=JSON.parse(localStorage.getItem('cs_v4')||'[]');
 let curMonth=new Date();
 let pendingB64=null,pendingResult=null;
+
 function save(){localStorage.setItem('cs_v4',JSON.stringify(entries));}
 function fmt(n){return '$'+Math.abs(+n).toFixed(2);}
 function getMS(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;}
 function getMe(){const ms=getMS(curMonth);return entries.filter(e=>e.date.startsWith(ms));}
 function getCat(en){return CATS.find(c=>c.en===en)||CATS[4];}
+
 function render(){
   document.getElementById('mLabel').textContent=curMonth.toLocaleDateString('zh-CN',{month:'short',year:'numeric'}).replace(' ','');
   const me=getMe();
@@ -314,6 +423,7 @@ function render(){
     return `<div><div class="day-hdr"><span>${ds}</span><span>${fmt(dt)}</span></div>${items.map(txHTML).join('')}</div>`;
   }).join('');
 }
+
 function txHTML(e){
   const cat=getCat(e.cat);
   const th=e.thumb?`<img class="tx-thumb" src="${e.thumb}" alt="">`:`<div class="tx-ph">${cat.emoji}</div>`;
@@ -330,7 +440,9 @@ function txHTML(e){
     </div>
   </div>`;
 }
+
 function changeMonth(d){curMonth=new Date(curMonth.getFullYear(),curMonth.getMonth()+d,1);render();}
+
 function triggerUpload(){document.getElementById('fileInput').click();}
 function handleFile(ev){
   const file=ev.target.files[0];if(!file)return;ev.target.value='';
@@ -354,6 +466,7 @@ function handleFile(ev){
   reader.readAsDataURL(file);
 }
 function closeScan(){document.getElementById('scanOv').classList.remove('open');pendingB64=null;}
+
 async function startRecognition(){
   if(!pendingB64){toast('⚠️ 请先选择图片');return;}
   document.getElementById('scanOv').classList.remove('open');
@@ -374,13 +487,14 @@ async function startRecognition(){
     toast('❌ 识别失败，请重试');console.error(err);
   }
 }
+
 function showResult(r){
   pendingResult=r;
   const cat=getCat(r.category);
   document.getElementById('rThumb').src='data:image/jpeg;base64,'+pendingB64;
   document.getElementById('rIcon').textContent=cat.emoji;
   document.getElementById('rCatName').textContent=cat.zh;
-  document.getElementById('rAmt').textContent=r.amount>0?fmt(r.amount):'$?';
+  document.getElementById('rAmt').textContent=r.amount>0?fmt(r.amount):'S$?';
   document.getElementById('rMerchant').textContent=r.merchant||'';
   document.getElementById('rReason').textContent=r.reason||'';
   document.getElementById('rAmtIn').value=r.amount||'';
@@ -392,6 +506,7 @@ function showResult(r){
 }
 function closeResult(){document.getElementById('resultOv').classList.remove('open');pendingResult=null;}
 function closeResultOv(e){if(e.target===document.getElementById('resultOv'))closeResult();}
+
 function confirmEntry(){
   const amount=parseFloat(document.getElementById('rAmtIn').value);
   if(!amount||amount<=0){toast('⚠️ 请填写金额');return;}
@@ -410,12 +525,16 @@ function confirmEntry(){
   const ed=new Date(entry.date+'T12:00:00');
   curMonth=new Date(ed.getFullYear(),ed.getMonth(),1);
   render();
+  const cat=getCat(entry.cat);
   toast(`🦆 已保存 ${fmt(amount)}`);
 }
+
 function openDetail(id){
   const e=entries.find(x=>x.id===id);if(!e)return;
   const cat=getCat(e.cat);
-  const imgEl=e.thumb?`<div class="det-img"><img src="${e.thumb}" alt=""></div>`:`<div class="det-img">${cat.emoji}</div>`;
+  const imgEl=e.thumb
+    ?`<div class="det-img" onclick="openLightbox('${e.id}')"><img src="${e.thumb}" alt=""></div>`
+    :`<div class="det-img">${cat.emoji}</div>`;
   document.getElementById('detailSheet').innerHTML=`
     <div class="handle"></div>${imgEl}
     <div class="det-rows">
@@ -436,6 +555,14 @@ function openDetail(id){
 function closeDet(){document.getElementById('detailOv').classList.remove('open');}
 function closeDetOv(e){if(e.target===document.getElementById('detailOv'))closeDet();}
 function delEntry(id){entries=entries.filter(x=>x.id!==id);save();render();closeDet();toast('🗑️ 已删除');}
+
+function openLightbox(id){
+  const e=entries.find(x=>x.id===id);if(!e||!e.thumb)return;
+  document.getElementById('lightboxImg').src=e.thumb;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
+
 function openEdit(id){
   const e=entries.find(x=>x.id===id);if(!e)return;
   closeDet();
@@ -470,6 +597,7 @@ function saveEdit(id){
   e.invoices=parseInt(document.getElementById('eInv').value)||1;
   save();render();closeDet();toast('🦆 已更新');
 }
+
 function openExport(){
   const me=getMe().sort((a,b)=>a.date.localeCompare(b.date));
   const total=me.reduce((s,e)=>s+(+e.amount),0);
@@ -501,33 +629,45 @@ function openExport(){
   document.getElementById('expOv').classList.add('open');
 }
 function closeExpOv(e){if(e.target===document.getElementById('expOv'))document.getElementById('expOv').classList.remove('open');}
+
 function exportExcel(){
   const me=getMe().sort((a,b)=>a.date.localeCompare(b.date));
   const today=new Date();
   const todayStr=`${today.getFullYear()}/${today.getMonth()+1}/${today.getDate()}`;
   const ms=getMS(curMonth);
   const monthEn=curMonth.toLocaleDateString('en-US',{month:'short',year:'2-digit'});
+
   const wb=XLSX.utils.book_new();
   const ws={};
   const range={s:{r:1,c:1},e:{r:1,c:1}};
+
   function sc(r,c,v,f){
     const addr=XLSX.utils.encode_cell({r,c});
-    ws[addr]=f?{f,t:'n'}:{v,t:typeof v==='number'?'n':'s'};
+    const t=typeof v==='number'?'n':'s';
+    ws[addr]=f?{f,t:'n'}:{v,t};
     if(r<range.s.r)range.s.r=r;if(c<range.s.c)range.s.c=c;
     if(r>range.e.r)range.e.r=r;if(c>range.e.c)range.e.c=c;
   }
+
+  // Header info
   sc(1,1,'EXPENSE CLAIM FORM');
   sc(3,1,'Company: ');sc(3,3,'Singapore Huashang Liquor Pte Ltd');
   sc(4,1,'Employee: ');sc(4,3,'GAGA');
   sc(5,1,'Date: ');sc(5,3,todayStr);
+
+  // Column headers (row index 6 = row 7)
   sc(6,1,'Date');sc(6,3,'Description');sc(6,4,'Invoice');
   sc(6,5,'EXP Category');sc(6,6,'Currency');sc(6,7,'Amount');
   sc(6,8,'Allowed\n GST-Input');sc(6,9,'TOTAL');sc(6,10,'REMARK');
+
+  // Data rows
   const dataStart=7;
+  const imgMeta=[];
   me.forEach((e,i)=>{
     const r=dataStart+i;
     const d=new Date(e.date+'T12:00:00');
-    sc(r,1,`${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()}`);
+    const dateStr=`${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()}`;
+    sc(r,1,dateStr);
     sc(r,3,e.desc||e.merchant||'');
     sc(r,4,e.invoices||1);
     sc(r,5,e.cat);
@@ -537,42 +677,260 @@ function exportExcel(){
     const hA=XLSX.utils.encode_cell({r,c:7});
     const iA=XLSX.utils.encode_cell({r,c:8});
     sc(r,9,null,`${hA}+${iA}`);
+    if(e.thumb){
+      // Store base64 for embedding
+      imgMeta.push({row:r,b64:e.thumb.replace(/^data:image\/\w+;base64,/,'')});
+      sc(r,10,'');
+    }
   });
+
+  // Buffer + total rows
   const bufR=dataStart+me.length;
   sc(bufR,8,null,`H${bufR+1}*0.09`);
   const totR=bufR+1;
   sc(totR,7,null,`SUM(H${dataStart+1}:H${bufR+1})`);
   sc(totR,8,null,`SUM(I${dataStart+1}:I${bufR+1})`);
   sc(totR,9,null,`SUM(J${dataStart+1}:J${bufR+1})`);
+
   ws['!ref']=XLSX.utils.encode_range(range);
-  ws['!cols']=[{wch:1},{wch:11},{wch:1},{wch:39},{wch:6},{wch:19},{wch:8},{wch:9},{wch:9},{wch:9},{wch:24}];
-  ws['!rows']=[{},{hpt:17.6},{},{hpt:20},{hpt:20},{hpt:20},{hpt:25},...me.map(()=>({hpt:70})),{hpt:15},{hpt:15}];
+  ws['!cols']=[
+    {wch:1},{wch:11},{wch:1},{wch:39},{wch:6},
+    {wch:19},{wch:8},{wch:9},{wch:9},{wch:9},{wch:24},
+  ];
+  ws['!rows']=[
+    {},{hpt:17.6},{},{hpt:20},{hpt:20},{hpt:20},{hpt:25},
+    ...me.map(()=>({hpt:70})),
+    {hpt:15},{hpt:15}
+  ];
   ws['!merges']=[{s:{r:1,c:1},e:{r:1,c:9}}];
+
+  // Embed receipt images using SheetJS !images
+  if(imgMeta.length>0){
+    ws['!images']=imgMeta.map(m=>({
+      '!pos':{r:m.row,c:10,x:2,y:2,w:80,h:60},
+      '!datatype':'base64',
+      '!data':m.b64
+    }));
+  }
+
   XLSX.utils.book_append_sheet(wb,ws,`HSL ${monthEn}`);
-  const catData=[['No.','EXP Category','Description'],[1,'Advertising','Expenses incurred for advertising while trying to increase sales'],[2,'Cleaning','Expenses incurred for cleaning business property.'],[3,'Entertainment','Expenses paid by company for the business but are not deductable for income tax purposes.'],[4,'Freight & Courier','Expenses incurred on courier & freight costs'],[5,'General Expenses','General expenses related to the running of the business.'],[6,'Insurance','Expenses incurred for insuring the business assets'],[7,'Interest Expense','Any interest expenses paid to your tax authority, business bank accounts or credit card accounts.'],[8,'Legal expenses','Expenses incurred on any legal matters'],[9,'Light, Power, Heating','Expenses incurred for lighting, powering or heating the premises'],[10,'Motor Vehicle Expenses','Expenses incurred on the running of company motor vehicles'],[11,'Office Expenses','General expenses related to the running of the business office.'],[12,'Conference & Seminar Expenses','Expenses incurred on the participation in conferences and seminars'],[13,'Printing & Stationery','Expenses incurred by the entity as a result of printing and stationery'],[14,'Repairs and Maintenance','Expenses incurred on a damaged or run down asset that will bring the asset back to its original condition'],[15,'Subscriptions','E.g. Magazines, professional bodies'],[16,'Telephone & Internet','Expenditure incurred from any business-related phone calls, phone lines, or internet connections'],[17,'Travel - National','Expenses incurred from domestic travel which has a business purpose'],[18,'Travel - International','Expenses incurred from international travel which has a business purpose']];
+
+  // EXP Category sheet
+  const catData=[
+    ['No.','EXP Category','Description'],
+    [1,'Advertising','Expenses incurred for advertising while trying to increase sales'],
+    [2,'Cleaning','Expenses incurred for cleaning business property.'],
+    [3,'Entertainment','Expenses paid by company for the business but are not deductable for income tax purposes.'],
+    [4,'Freight & Courier','Expenses incurred on courier & freight costs'],
+    [5,'General Expenses','General expenses related to the running of the business.'],
+    [6,'Insurance','Expenses incurred for insuring the business assets'],
+    [7,'Interest Expense','Any interest expenses paid to your tax authority, business bank accounts or credit card accounts.'],
+    [8,'Legal expenses','Expenses incurred on any legal matters'],
+    [9,'Light, Power, Heating','Expenses incurred for lighting, powering or heating the premises'],
+    [10,'Motor Vehicle Expenses','Expenses incurred on the running of company motor vehicles'],
+    [11,'Office Expenses','General expenses related to the running of the business office.'],
+    [12,'Conference & Seminar Expenses','Expenses incurred on the participation in conferences and seminars'],
+    [13,'Printing & Stationery','Expenses incurred by the entity as a result of printing and stationery'],
+    [14,'Repairs and Maintenance','Expenses incurred on a damaged or run down asset that will bring the asset back to its original condition'],
+    [15,'Subscriptions','E.g. Magazines, professional bodies'],
+    [16,'Telephone & Internet','Expenditure incurred from any business-related phone calls, phone lines, or internet connections'],
+    [17,'Travel - National','Expenses incurred from domestic travel which has a business purpose'],
+    [18,'Travel - International','Expenses incurred from international travel which has a business purpose'],
+  ];
   const wsCat=XLSX.utils.aoa_to_sheet(catData);
   wsCat['!cols']=[{wch:5},{wch:30},{wch:80}];
   XLSX.utils.book_append_sheet(wb,wsCat,'EXP Category');
+
   XLSX.writeFile(wb,`Huashang_Expense_Claim_of_GAGA_${ms}.xlsx`);
   toast('🦆 Excel 已下载！');
 }
+
 function copyText(){
   const me=getMe().sort((a,b)=>a.date.localeCompare(b.date));
   const label=curMonth.toLocaleDateString('zh-CN',{year:'numeric',month:'long'});
   const total=me.reduce((s,e)=>s+(+e.amount),0);
   let txt=`华商报销单 · ${label}\n员工：GAGA\n${'─'.repeat(34)}\n`;
-  me.forEach(e=>{const cat=getCat(e.cat);txt+=`${e.date}  ${(e.desc||e.merchant||'').slice(0,18).padEnd(18)}  ${cat.en.slice(0,16).padEnd(16)}  S$${(+e.amount).toFixed(2)}\n`;});
+  me.forEach(e=>{
+    const cat=getCat(e.cat);
+    txt+=`${e.date}  ${(e.desc||e.merchant||'').slice(0,18).padEnd(18)}  ${cat.en.slice(0,16).padEnd(16)}  S$${(+e.amount).toFixed(2)}\n`;
+  });
   txt+=`${'─'.repeat(34)}\n合计：S$${total.toFixed(2)}`;
   navigator.clipboard.writeText(txt).then(()=>toast('📋 已复制'));
 }
+
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2400);}
+
+// ── Nickname & Greeting ──
+function getNickname(){return localStorage.getItem('cs_nickname')||'';}
+function getGreeting(){
+  const h=new Date().getHours();
+  if(h<6) return '夜猫子';
+  if(h<12) return '早上好';
+  if(h<14) return '午安';
+  if(h<18) return '下午好';
+  if(h<22) return '晚上好';
+  return '夜深了';
+}
+function updateGreet(){
+  const name=getNickname();
+  const sub=document.getElementById('greetSub');
+  if(name) sub.textContent=`${getGreeting()}呀 ${name}`;
+  else sub.textContent='华商报销助手';
+}
+function saveNickname(){
+  const val=document.getElementById('nicknameInput').value.trim();
+  if(!val){toast('🦆 告诉我你的昵称吧~');return;}
+  localStorage.setItem('cs_nickname',val);
+  const ov=document.getElementById('welcomeOv');
+
+  const randomGreet='报销制度烦死了，但钱要回来才是正经事 💸';
+
+  // Show GAGA message before closing
+  document.getElementById('welcomeOv').innerHTML=`
+    <div class="welcome-card" style="animation:popIn 0.4s cubic-bezier(0.34,1.4,0.64,1)">
+      <div style="font-size:56px;margin-bottom:16px">🦆</div>
+      <div style="font-size:20px;font-weight:800;color:var(--text);margin-bottom:10px">早就听 GAGA 提起过你了！</div>
+      <div style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:24px">${randomGreet}</div>
+      <button class="welcome-btn" onclick="dismissWelcome()">开始用吧 🦆</button>
+    </div>`;
+  updateGreet();
+}
+function dismissWelcome(){
+  const ov=document.getElementById('welcomeOv');
+  ov.classList.add('hide');
+  setTimeout(()=>ov.style.display='none',400);
+}
+function checkWelcome(){
+  if(!getNickname()){
+    document.getElementById('welcomeOv').style.display='flex';
+    setTimeout(()=>document.getElementById('nicknameInput').focus(),300);
+  } else {
+    document.getElementById('welcomeOv').style.display='none';
+    updateGreet();
+  }
+}
+
+// ── Settings ──
+function openSettings(){
+  const name=getNickname();
+  const totalEntries=entries.length;
+  const totalAmt=entries.reduce((s,e)=>s+(+e.amount),0);
+  document.getElementById('settingsSheet').innerHTML=`
+    <div class="handle"></div>
+    <div style="font-size:18px;font-weight:800;color:var(--text);margin-bottom:20px">⚙️ 设置</div>
+
+    <div class="set-section">
+      <div class="set-label">个人</div>
+      <div class="set-group">
+        <div class="set-row" onclick="editNickname()">
+          <div class="set-row-l"><span class="set-icon">🦆</span><span class="set-name">我的昵称</span></div>
+          <div style="display:flex;align-items:center;gap:6px"><span class="set-val">${name||'未设置'}</span><span class="set-arrow">›</span></div>
+        </div>
+        <div class="set-row set-danger" onclick="confirmClearNickname()">
+          <div class="set-row-l"><span class="set-icon">🗑️</span><span class="set-name">清除个人数据</span></div>
+          <span class="set-arrow">›</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="set-section">
+      <div class="set-label">数据</div>
+      <div class="set-group">
+        <div class="set-row" style="cursor:default">
+          <div class="set-row-l"><span class="set-icon">📊</span><span class="set-name">累计记录</span></div>
+          <span class="set-val">${totalEntries} 笔</span>
+        </div>
+        <div class="set-row" style="cursor:default">
+          <div class="set-row-l"><span class="set-icon">💰</span><span class="set-name">累计报销</span></div>
+          <span class="set-val">${fmt(totalAmt)}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="set-section">
+      <div class="set-label">导出说明</div>
+      <div class="set-group">
+        <div class="set-row" style="cursor:default;align-items:flex-start">
+          <div class="set-row-l"><span class="set-icon">📋</span>
+          <span class="set-name" style="font-size:12px;line-height:1.6;font-weight:500;color:var(--muted)">导出 .xlsx 文件，格式对应华商<br>报销模板，包含两个 Sheet：<br>当月明细 + EXP Category 说明</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="set-section">
+      <div class="set-label">关于</div>
+      <div class="set-group">
+        <div class="set-row" style="cursor:default">
+          <div class="set-row-l"><span class="set-icon">🦆</span><span class="set-name">ClaimSnap</span></div>
+          <span class="set-val">Made by GAGA 🦆</span>
+        </div>
+        <div class="set-row" style="cursor:default">
+          <div class="set-row-l"><span class="set-icon">🤖</span><span class="set-name">AI 识别</span></div>
+          <span class="set-val">Claude Sonnet</span>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('settingsOv').classList.add('open');
+}
+function closeSettings(e){if(e.target===document.getElementById('settingsOv'))document.getElementById('settingsOv').classList.remove('open');}
+
+function editNickname(){
+  const name=getNickname();
+  document.getElementById('settingsSheet').innerHTML=`
+    <div class="handle"></div>
+    <div style="font-size:16px;font-weight:800;color:var(--text);margin-bottom:6px">🦆 修改昵称</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:18px">改完之后我会换个方式叫你</div>
+    <div class="nickname-edit">
+      <input id="newNickInput" type="text" value="${name}" maxlength="10" placeholder="新昵称…">
+      <button onclick="applyNickname()">保存</button>
+    </div>
+    <button onclick="openSettings()" style="width:100%;padding:12px;background:var(--s2);border:2px solid var(--border);border-radius:12px;font-family:var(--font);font-size:13px;font-weight:600;color:var(--muted);cursor:pointer">← 返回</button>`;
+  setTimeout(()=>document.getElementById('newNickInput').focus(),100);
+}
+function applyNickname(){
+  const val=document.getElementById('newNickInput').value.trim();
+  if(!val){toast('🦆 昵称不能为空');return;}
+  localStorage.setItem('cs_nickname',val);
+  updateGreet();
+  openSettings();
+  toast(`🦆 好的 ${val}！`);
+}
+function confirmClearNickname(){
+  if(confirm('清除个人数据后会重新显示欢迎页，报销记录不受影响，确定吗？')){
+    localStorage.removeItem('cs_nickname');
+    document.getElementById('settingsOv').classList.remove('open');
+    document.getElementById('greetSub').textContent='华商报销助手';
+    document.getElementById('welcomeOv').innerHTML=`
+      <div class="welcome-card">
+        <div style="font-size:56px;margin-bottom:12px;animation:wobble 2s ease-in-out infinite">🦆</div>
+        <div style="font-size:22px;font-weight:800;color:var(--text);margin-bottom:6px">你好呀！</div>
+        <div style="font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.6">我是 ClaimSnap 🦆<br>你的华商报销小助手<br>我该怎么称呼你呢？</div>
+        <input id="nicknameInput" class="welcome-input" type="text" placeholder="输入你的昵称…" maxlength="10" onkeydown="if(event.key==='Enter')saveNickname()">
+        <button class="welcome-btn" onclick="saveNickname()">出发吧 🦆</button>
+      </div>`;
+    document.getElementById('welcomeOv').style.display='flex';
+    document.getElementById('welcomeOv').classList.remove('hide');
+    setTimeout(()=>document.getElementById('nicknameInput')?.focus(),300);
+  }
+}
+
+// Month Picker
 let pickerYear=new Date().getFullYear();
-function openMonthPicker(){pickerYear=curMonth.getFullYear();renderPicker();document.getElementById('mpickerOv').classList.add('open');}
-function closeMonthPicker(e){if(!e||e.target===document.getElementById('mpickerOv'))document.getElementById('mpickerOv').classList.remove('open');}
+function openMonthPicker(){
+  pickerYear=curMonth.getFullYear();
+  renderPicker();
+  document.getElementById('mpickerOv').classList.add('open');
+}
+function closeMonthPicker(e){
+  if(!e||e.target===document.getElementById('mpickerOv'))
+    document.getElementById('mpickerOv').classList.remove('open');
+}
 function pickerYearChange(d){pickerYear+=d;renderPicker();}
 function renderPicker(){
   document.getElementById('pickerYear').textContent=pickerYear;
   const months=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  // Find months with data
   const withData=new Set(entries.map(e=>e.date.slice(0,7)));
   document.getElementById('pickerGrid').innerHTML=months.map((m,i)=>{
     const ms=`${pickerYear}-${String(i+1).padStart(2,'0')}`;
@@ -581,8 +939,14 @@ function renderPicker(){
     return `<div class="mpicker-m ${isActive?'active':''} ${hasData&&!isActive?'has-data':''}" onclick="selectMonth(${i})">${m}</div>`;
   }).join('');
 }
-function selectMonth(m){curMonth=new Date(pickerYear,m,1);render();document.getElementById('mpickerOv').classList.remove('open');}
+function selectMonth(m){
+  curMonth=new Date(pickerYear,m,1);
+  render();
+  document.getElementById('mpickerOv').classList.remove('open');
+}
+
 render();
+checkWelcome();
 </script>
 </body>
 </html>

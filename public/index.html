@@ -4,196 +4,211 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="ClaimSnap">
-<meta name="theme-color" content="#0a0a0f">
+<meta name="theme-color" content="#FFF8E1">
 <title>ClaimSnap · 华商报销</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0a0a0f;--s1:#13131a;--s2:#1c1c26;--s3:#252532;--border:#2a2a3a;
-  --text:#eeeef5;--muted:#5a5a72;--accent:#00e5a0;--accent-glow:rgba(0,229,160,0.18);
-  --blue:#4f9eff;--danger:#ff5c72;
+  --bg:#FFFBEF;--s1:#FFFFFF;--s2:#FFF8DC;--s3:#FFF3C0;--border:#FFE082;
+  --text:#5D4037;--muted:#A1887F;--accent:#FFD600;--accent2:#FFAB00;
+  --accent-glow:rgba(255,214,0,0.25);--blue:#29B6F6;--danger:#EF5350;
   --mono:'JetBrains Mono',monospace;--font:'Sora',sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font)}
 #app{display:flex;flex-direction:column;height:100dvh;max-width:430px;margin:0 auto;position:relative}
-.hdr{padding:calc(env(safe-area-inset-top,0px)+14px) 18px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.hdr{padding:calc(env(safe-area-inset-top,0px)+14px) 18px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--bg)}
 .brand{display:flex;align-items:center;gap:9px}
-.logo{width:32px;height:32px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.brand-text{font-size:16px;font-weight:700;letter-spacing:-0.3px}
-.brand-text span{color:var(--accent)}
-.brand-sub{font-size:10px;color:var(--muted);font-family:var(--mono)}
-.icon-btn{background:var(--s1);border:1px solid var(--border);border-radius:9px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px}
-.icon-btn:active{border-color:var(--accent)}
-.sum{margin:2px 16px 12px;background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:13px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;position:relative;overflow:hidden}
-.sum::before{content:'';position:absolute;top:0;left:0;right:0;height:1.5px;background:linear-gradient(90deg,transparent,var(--accent),transparent)}
+.logo{width:36px;height:36px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 2px 8px rgba(255,214,0,0.4)}
+.brand-text{font-size:17px;font-weight:800;letter-spacing:-0.5px;color:var(--text)}
+.brand-text span{color:var(--accent2)}
+.brand-sub{font-size:12px;color:var(--muted);font-family:var(--mono)}
+.mnav{display:flex;align-items:center;gap:6px}
+.mnav button{background:var(--s2);border:2px solid var(--border);color:var(--accent2);width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;font-weight:700;transition:all 0.12s}
+.mnav button:active{background:var(--border);transform:scale(0.92)}
+.mnav span{font-size:13px;font-weight:700;color:var(--text);min-width:72px;text-align:center;background:var(--s2);border:2px solid var(--border);border-radius:10px;padding:4px 8px;cursor:pointer;transition:all 0.12s}
+.mnav span:active{background:var(--border)}
+.sum{margin:4px 16px 14px;background:linear-gradient(135deg,#FFD600,#FFAB00);border-radius:20px;padding:16px 18px;display:flex;align-items:center;flex-shrink:0;position:relative;overflow:hidden;box-shadow:0 4px 16px rgba(255,171,0,0.35)}
+.sum::before{content:'🦆';position:absolute;right:-8px;bottom:-10px;font-size:64px;opacity:0.15;transform:rotate(-10deg)}
 .sum-main{flex:1;min-width:0}
-.sum-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:600}
-.sum-amt{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--accent);margin-top:2px;letter-spacing:-1px}
-.sum-n{font-size:11px;color:var(--muted);margin-top:1px}
-.sum-right{text-align:right;flex-shrink:0}
-.mnav{display:flex;align-items:center;gap:5px;margin-bottom:4px;justify-content:flex-end}
-.mnav button{background:var(--s2);border:1px solid var(--border);color:var(--muted);width:22px;height:22px;border-radius:6px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center}
-.mnav button:active{border-color:var(--accent);color:var(--accent)}
-.mnav span{font-size:11px;font-weight:600;min-width:48px;text-align:center}
-.exp-link{font-size:11px;color:var(--blue);cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.sum-label{font-size:10px;color:rgba(93,64,55,0.7);text-transform:uppercase;letter-spacing:1px;font-weight:700}
+.sum-amt{font-family:var(--mono);font-size:28px;font-weight:700;color:#5D4037;margin-top:3px;letter-spacing:-1px}
+.sum-n{font-size:11px;color:rgba(93,64,55,0.6);margin-top:2px}
 .list{flex:1;overflow-y:auto;padding:0 16px 110px;-webkit-overflow-scrolling:touch}
-.list::-webkit-scrollbar{width:2px}
-.list::-webkit-scrollbar-thumb{background:var(--border)}
-.day-hdr{font-size:10px;color:var(--muted);font-weight:600;padding:10px 0 5px;display:flex;justify-content:space-between}
-.tx{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:7px;display:flex;gap:10px;align-items:center;cursor:pointer;transition:transform 0.12s;position:relative;overflow:hidden;animation:up 0.2s ease}
-.tx:active{transform:scale(0.97)}
-.tx::after{content:'';position:absolute;left:0;top:10px;bottom:10px;width:3px;background:var(--accent);border-radius:0 2px 2px 0}
-.tx-thumb{width:42px;height:42px;border-radius:10px;object-fit:cover;flex-shrink:0;border:1px solid var(--border)}
-.tx-ph{width:42px;height:42px;border-radius:10px;background:var(--s2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.list::-webkit-scrollbar{width:3px}
+.list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.day-hdr{font-size:11px;color:var(--muted);font-weight:600;padding:12px 0 6px;display:flex;justify-content:space-between}
+.tx{background:var(--s1);border:2px solid var(--border);border-radius:18px;padding:13px;margin-bottom:8px;display:flex;gap:11px;align-items:center;cursor:pointer;transition:all 0.15s;position:relative;overflow:hidden;animation:up 0.2s ease;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+.tx:active{transform:scale(0.97);background:var(--s2)}
+.tx::after{content:'';position:absolute;left:0;top:10px;bottom:10px;width:4px;background:var(--accent);border-radius:0 3px 3px 0}
+.tx-thumb{width:44px;height:44px;border-radius:12px;object-fit:cover;flex-shrink:0;border:2px solid var(--border)}
+.tx-ph{width:44px;height:44px;border-radius:12px;background:var(--s2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
 .tx-info{flex:1;min-width:0}
-.tx-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tx-meta{display:flex;align-items:center;gap:4px;margin-top:2px}
-.tag{background:var(--s3);border-radius:4px;padding:2px 6px;font-size:10px;color:var(--muted);font-weight:500}
+.tx-name{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx-meta{display:flex;align-items:center;gap:4px;margin-top:3px}
+.tag{background:var(--s3);border-radius:6px;padding:2px 8px;font-size:10px;color:var(--accent2);font-weight:600;border:1px solid var(--border)}
 .tx-note{font-size:10px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tx-r{text-align:right;flex-shrink:0}
-.tx-amt{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--accent)}
-.tx-time{font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:1px}
-.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:50vh;gap:12px;color:var(--muted)}
-.empty-icon{font-size:50px;opacity:0.25}
-.empty p{font-size:13px;text-align:center;line-height:1.8}
-.fab-wrap{position:absolute;bottom:0;left:0;right:0;padding:12px 16px calc(16px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,var(--bg) 45%)}
-.fab{width:100%;background:var(--accent);color:#08080f;border:none;border-radius:16px;padding:16px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 6px 24px rgba(0,229,160,0.28);transition:all 0.15s}
+.tx-amt{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--accent2)}
+.tx-time{font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:2px}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:50vh;gap:14px;color:var(--muted)}
+.empty-icon{font-size:64px;animation:wobble 2s ease-in-out infinite}
+@keyframes wobble{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+.empty p{font-size:13px;text-align:center;line-height:1.8;color:var(--muted)}
+.fab-wrap{position:absolute;bottom:0;left:0;right:0;padding:10px 16px calc(14px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,var(--bg) 50%)}
+.fab-row{display:grid;grid-template-columns:3fr 1fr;gap:10px}
+.fab{border:none;border-radius:18px;font-family:var(--font);font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
 .fab:active{transform:scale(0.97)}
-.ov{position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;opacity:0;pointer-events:none;transition:opacity 0.2s}
+.fab-primary{background:linear-gradient(135deg,#FFD600,#FFAB00);color:#5D4037;box-shadow:0 6px 20px rgba(255,171,0,0.4);font-size:13px;padding:15px}
+.fab-secondary{background:var(--s1);color:var(--text);border:2px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,0.06);font-size:18px;padding:10px 8px;flex-direction:column;gap:3px;line-height:1.2}
+.mpicker-ov{position:fixed;inset:0;background:rgba(93,64,55,0.3);backdrop-filter:blur(4px);z-index:300;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s}
+.mpicker-ov.open{opacity:1;pointer-events:all}
+.mpicker{background:var(--s1);border-radius:24px;padding:24px 20px;width:300px;border:3px solid var(--border);box-shadow:0 16px 48px rgba(0,0,0,0.12)}
+.mpicker-title{font-size:16px;font-weight:800;color:var(--text);margin-bottom:6px;text-align:center}
+.mpicker-sub{font-size:11px;color:var(--muted);text-align:center;margin-bottom:16px}
+.mpicker-year{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:14px}
+.mpicker-year button{background:var(--s2);border:2px solid var(--border);color:var(--accent2);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:15px;font-weight:700}
+.mpicker-year span{font-size:15px;font-weight:700;color:var(--text);min-width:48px;text-align:center}
+.mpicker-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.mpicker-m{background:var(--s2);border:2px solid var(--border);border-radius:10px;padding:10px 4px;text-align:center;cursor:pointer;font-size:12px;font-weight:600;color:var(--text);transition:all 0.12s}
+.mpicker-m:active{transform:scale(0.93)}
+.mpicker-m.active{background:var(--accent);border-color:var(--accent2);color:#5D4037}
+.mpicker-m.has-data{border-color:var(--accent2)}
+.mpicker-cancel{width:100%;padding:12px;background:var(--s2);border:2px solid var(--border);border-radius:12px;font-family:var(--font);font-size:14px;font-weight:600;color:var(--muted);cursor:pointer}
+.ov{position:fixed;inset:0;background:rgba(255,248,225,0.85);backdrop-filter:blur(8px);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;opacity:0;pointer-events:none;transition:opacity 0.2s}
 .ov.open{opacity:1;pointer-events:all}
-.sov{position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s}
+.sov{position:fixed;inset:0;background:rgba(93,64,55,0.3);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s}
 .sov.open{opacity:1;pointer-events:all}
-.sheet{background:var(--s1);border-radius:22px 22px 0 0;padding:20px 18px calc(28px + env(safe-area-inset-bottom,0px));width:100%;max-width:430px;transform:translateY(100%);transition:transform 0.3s cubic-bezier(0.34,1.2,0.64,1);overflow-y:auto;max-height:92dvh}
+.sheet{background:var(--s1);border-radius:28px 28px 0 0;padding:20px 18px calc(28px + env(safe-area-inset-bottom,0px));width:100%;max-width:430px;transform:translateY(100%);transition:transform 0.32s cubic-bezier(0.34,1.2,0.64,1);overflow-y:auto;max-height:92dvh;border-top:3px solid var(--border)}
 .sov.open .sheet{transform:translateY(0)}
-.handle{width:34px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 18px}
-.scan-box{width:260px;height:320px;border:2px solid var(--accent);border-radius:16px;overflow:hidden;background:var(--s1);position:relative}
+.handle{width:40px;height:5px;background:var(--border);border-radius:3px;margin:0 auto 20px}
+.scan-box{width:260px;height:320px;border:3px solid var(--accent);border-radius:20px;overflow:hidden;background:var(--s1);position:relative;box-shadow:0 8px 24px rgba(255,171,0,0.3)}
 .scan-box img{width:100%;height:100%;object-fit:contain;position:relative;z-index:1}
-.scan-line{position:absolute;width:90%;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);animation:scanLine 2s ease-in-out infinite;left:5%;z-index:2}
+.scan-line{position:absolute;width:90%;height:3px;background:linear-gradient(90deg,transparent,var(--accent),transparent);animation:scanLine 2s ease-in-out infinite;left:5%;z-index:2;border-radius:2px}
 @keyframes scanLine{0%,100%{top:8%}50%{top:90%}}
-.scan-hint{font-size:13px;color:var(--muted);text-align:center;line-height:1.6;max-width:260px}
-.scan-hint b{color:var(--text);display:block;font-size:14px;margin-bottom:2px}
+.scan-hint{font-size:13px;color:var(--text);text-align:center;line-height:1.6;max-width:260px;background:var(--s1);border-radius:14px;padding:12px 16px;border:2px solid var(--border)}
+.scan-hint b{display:block;font-size:14px;margin-bottom:2px;color:var(--accent2)}
 .row2{display:flex;gap:10px;width:260px}
-.sb{flex:1;padding:13px;border-radius:12px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all 0.12s}
-.sb.p{background:var(--accent);color:#08080f}
-.sb.s{background:var(--s2);color:var(--text);border:1px solid var(--border)}
+.sb{flex:1;padding:13px;border-radius:14px;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all 0.12s}
+.sb.p{background:linear-gradient(135deg,#FFD600,#FFAB00);color:#5D4037}
+.sb.s{background:var(--s1);color:var(--muted);border:2px solid var(--border)}
 .sb:active{transform:scale(0.95)}
-.spinner{width:56px;height:56px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--accent);animation:spin 0.8s linear infinite}
+.spinner{width:60px;height:60px;border-radius:50%;border:4px solid var(--border);border-top-color:var(--accent2);animation:spin 0.8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.ai-msg{font-size:13px;color:var(--muted);text-align:center;line-height:1.7;max-width:220px}
-.ai-msg b{color:var(--accent);display:block;font-size:15px;margin-bottom:4px}
+.ai-msg{font-size:13px;color:var(--text);text-align:center;line-height:1.7;max-width:220px;background:var(--s1);border-radius:16px;padding:14px 18px;border:2px solid var(--border)}
+.ai-msg b{color:var(--accent2);display:block;font-size:15px;margin-bottom:4px}
 .r-thumb-wrap{display:flex;justify-content:center;margin-bottom:16px;position:relative}
-.r-thumb{width:100px;height:66px;object-fit:cover;border-radius:10px;border:2px solid var(--border)}
-.r-badge{position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);background:var(--accent);color:#08080f;font-size:10px;font-weight:700;padding:2px 10px;border-radius:20px;white-space:nowrap}
+.r-thumb{width:110px;height:72px;object-fit:cover;border-radius:14px;border:3px solid var(--border)}
+.r-badge{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#FFD600,#FFAB00);color:#5D4037;font-size:10px;font-weight:700;padding:3px 12px;border-radius:20px;white-space:nowrap;box-shadow:0 2px 8px rgba(255,171,0,0.3)}
 .r-cat{display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:4px}
-.r-amount{text-align:center;font-family:var(--mono);font-size:38px;font-weight:700;color:var(--accent);letter-spacing:-2px;margin-bottom:3px}
-.r-merchant{text-align:center;font-size:13px;font-weight:500;margin-bottom:2px}
-.r-reason{text-align:center;font-size:11px;color:var(--muted);margin-bottom:16px;padding:0 8px;line-height:1.5}
-.r-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
-.rf{display:flex;flex-direction:column;gap:4px}
-.rf label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.7px;font-weight:600}
-.rf input,.rf select,.ri{background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:9px 11px;color:var(--text);font-family:var(--font);font-size:13px;outline:none;transition:border-color 0.13s;width:100%}
-.rf input:focus,.rf select:focus,.ri:focus{border-color:var(--accent)}
-.rf select option{background:var(--s2)}
-.ri{margin-bottom:10px}
-.r-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.rb{padding:14px;border-radius:12px;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all 0.12s}
-.rb.ok{background:var(--accent);color:#08080f}
-.rb.no{background:var(--s2);color:var(--muted);border:1px solid var(--border)}
+.r-amount{text-align:center;font-family:var(--mono);font-size:40px;font-weight:800;color:var(--accent2);letter-spacing:-2px;margin-bottom:3px}
+.r-merchant{text-align:center;font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.r-reason{text-align:center;font-size:11px;color:var(--muted);margin-bottom:18px;padding:0 8px;line-height:1.5}
+.r-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.rf{display:flex;flex-direction:column;gap:5px}
+.rf label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.7px;font-weight:700}
+.rf input,.rf select,.ri{background:var(--s2);border:2px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-family:var(--font);font-size:13px;outline:none;transition:border-color 0.13s;width:100%}
+.rf input:focus,.rf select:focus,.ri:focus{border-color:var(--accent2)}
+.rf select option{background:var(--s1)}
+.ri{margin-bottom:12px}
+.r-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rb{padding:14px;border-radius:14px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;border:none;transition:all 0.12s}
+.rb.ok{background:linear-gradient(135deg,#FFD600,#FFAB00);color:#5D4037}
+.rb.no{background:var(--s2);color:var(--muted);border:2px solid var(--border)}
 .rb:active{transform:scale(0.96)}
-.det-img{width:100%;height:140px;border-radius:12px;overflow:hidden;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:12px}
+.det-img{width:100%;height:150px;border-radius:16px;overflow:hidden;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:40px;margin-bottom:14px;border:2px solid var(--border)}
 .det-img img{width:100%;height:100%;object-fit:cover}
-.det-rows{background:var(--s2);border-radius:12px;padding:2px 0;margin-bottom:12px}
-.det-row{display:flex;justify-content:space-between;align-items:flex-start;padding:9px 14px;border-bottom:1px solid var(--border)}
+.det-rows{background:var(--s2);border-radius:16px;padding:4px 0;margin-bottom:14px;border:2px solid var(--border)}
+.det-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 16px;border-bottom:1px solid var(--border)}
 .det-row:last-child{border:none}
-.det-k{font-size:11px;color:var(--muted);flex-shrink:0;padding-right:10px}
-.det-v{font-size:12px;font-weight:500;text-align:right;word-break:break-word;max-width:200px}
-.det-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.db{padding:13px;border-radius:12px;font-family:var(--font);font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all 0.12s;text-align:center}
-.db.del{background:rgba(255,92,114,0.1);color:var(--danger);border:1px solid rgba(255,92,114,0.3)}
-.db.cls{background:var(--s2);color:var(--text);border:1px solid var(--border)}
+.det-k{font-size:11px;color:var(--muted);flex-shrink:0;padding-right:10px;font-weight:600}
+.det-v{font-size:12px;font-weight:600;text-align:right;word-break:break-word;max-width:200px;color:var(--text)}
+.det-acts{display:grid;gap:8px}
+.db{padding:13px;border-radius:14px;font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all 0.12s;text-align:center}
+.db.del{background:rgba(239,83,80,0.1);color:var(--danger);border:2px solid rgba(239,83,80,0.3)}
+.db.cls{background:var(--s2);color:var(--text);border:2px solid var(--border)}
 .db:active{transform:scale(0.95)}
-.exp-title{font-size:17px;font-weight:700;margin-bottom:2px}
-.exp-sub{font-size:11px;color:var(--muted);margin-bottom:14px}
-.exp-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
+.exp-title{font-size:18px;font-weight:800;margin-bottom:2px;color:var(--text)}
+.exp-sub{font-size:11px;color:var(--muted);margin-bottom:16px}
+.exp-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
 .exp-item:last-child{border:none}
 .exp-il{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
-.exp-name{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:155px}
+.exp-name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:155px;color:var(--text)}
 .exp-sub2{font-size:10px;color:var(--muted);font-family:var(--mono)}
-.exp-a{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--accent);flex-shrink:0;padding-left:6px}
-.exp-total{display:flex;justify-content:space-between;align-items:center;padding:12px 0 2px;border-top:2px solid var(--border);margin-top:3px}
-.exp-tl{font-size:13px;font-weight:600}
-.exp-ta{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--accent)}
-.exp-btns{display:flex;flex-direction:column;gap:8px;margin-top:14px}
-.eb{padding:14px;border-radius:12px;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all 0.12s;text-align:center}
-.eb.pdf{background:var(--accent);color:#08080f}
-.eb.copy{background:var(--s2);color:var(--text);border:1px solid var(--border)}
+.exp-a{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent2);flex-shrink:0;padding-left:6px}
+.exp-total{display:flex;justify-content:space-between;align-items:center;padding:14px 0 2px;border-top:3px solid var(--border);margin-top:4px}
+.exp-tl{font-size:14px;font-weight:700;color:var(--text)}
+.exp-ta{font-family:var(--mono);font-size:22px;font-weight:800;color:var(--accent2)}
+.exp-btns{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.eb{padding:15px;border-radius:14px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;border:none;transition:all 0.12s;text-align:center}
+.eb.excel{background:linear-gradient(135deg,#FFD600,#FFAB00);color:#5D4037;box-shadow:0 4px 12px rgba(255,171,0,0.3)}
+.eb.copy{background:var(--s2);color:var(--text);border:2px solid var(--border)}
 .eb:active{transform:scale(0.96)}
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:9px 16px;font-size:12px;opacity:0;transition:all 0.24s;z-index:999;white-space:nowrap;pointer-events:none;max-width:calc(100vw - 32px);text-align:center}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--s1);border:2px solid var(--border);border-radius:14px;padding:10px 18px;font-size:13px;font-weight:600;opacity:0;transition:all 0.24s;z-index:999;white-space:nowrap;pointer-events:none;max-width:calc(100vw - 32px);text-align:center;color:var(--text);box-shadow:0 4px 16px rgba(0,0,0,0.1)}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
 <div id="app">
   <div class="hdr">
     <div class="brand">
-      <div class="logo">📎</div>
+      <div class="logo">🦆</div>
       <div>
         <div class="brand-text">Claim<span>Snap</span></div>
         <div class="brand-sub">华商报销助手</div>
       </div>
     </div>
-    <div class="icon-btn" onclick="openExport()">📋</div>
+    <div class="mnav">
+      <button onclick="changeMonth(-1)">‹</button>
+      <span id="mLabel" onclick="openMonthPicker()" title="点击选择月份"></span>
+      <button onclick="changeMonth(1)">›</button>
+    </div>
   </div>
   <div class="sum">
     <div class="sum-main">
       <div class="sum-label">本月待报销</div>
-      <div class="sum-amt" id="sumAmt">S$0.00</div>
+      <div class="sum-amt" id="sumAmt">$0.00</div>
       <div class="sum-n" id="sumN">0 笔记录</div>
-    </div>
-    <div class="sum-right">
-      <div class="mnav">
-        <button onclick="changeMonth(-1)">‹</button>
-        <span id="mLabel"></span>
-        <button onclick="changeMonth(1)">›</button>
-      </div>
-      <div class="exp-link" onclick="openExport()">生成报销单 →</div>
     </div>
   </div>
   <div class="list" id="list">
     <div class="empty" id="emptyEl">
-      <div class="empty-icon">📸</div>
-      <p>上传收据截图<br>AI 自动识别金额与类别<br>月底一键导出华商报销单 PDF</p>
+      <div class="empty-icon">🦆</div>
+      <p>上传收据截图<br>AI 自动识别金额与类别<br>月底一键导出华商报销单</p>
     </div>
     <div id="txList"></div>
   </div>
   <div class="fab-wrap">
-    <button class="fab" onclick="triggerUpload()">
-      <span style="font-size:20px">📷</span> 拍照 / 上传收据
-    </button>
+    <div class="fab-row">
+      <button class="fab fab-primary" onclick="triggerUpload()">拍照上传</button>
+      <button class="fab fab-secondary" onclick="openExport()">📋<br><span style="font-size:11px;font-weight:700">报销导出</span></button>
+    </div>
   </div>
 </div>
+
 <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFile(event)">
+
 <div class="ov" id="scanOv">
   <div class="scan-box">
     <div class="scan-line"></div>
     <img id="previewImg" src="" alt="" style="position:relative;z-index:1">
   </div>
-  <div class="scan-hint"><b>图片已加载</b>点「AI 识别」自动提取信息</div>
+  <div class="scan-hint"><b>图片已加载 🦆</b>点「AI 识别」自动提取信息</div>
   <div class="row2">
     <button class="sb s" onclick="closeScan()">取消</button>
     <button class="sb p" onclick="startRecognition()">✨ AI 识别</button>
   </div>
 </div>
+
 <div class="ov" id="aiOv">
   <div class="spinner"></div>
-  <div class="ai-msg" id="aiMsg"><b>AI 分析中</b>正在识别收据内容…</div>
+  <div class="ai-msg" id="aiMsg"><b>AI 分析中 🦆</b>正在识别收据内容…</div>
 </div>
+
 <div class="sov" id="resultOv" onclick="closeResultOv(event)">
   <div class="sheet">
     <div class="handle"></div>
@@ -201,8 +216,8 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
       <img class="r-thumb" id="rThumb" src="" alt="">
       <div class="r-badge">✨ AI 识别完成</div>
     </div>
-    <div class="r-cat"><span id="rIcon" style="font-size:22px"></span><span id="rCatName" style="font-size:12px;color:var(--muted)"></span></div>
-    <div class="r-amount" id="rAmt">S$0.00</div>
+    <div class="r-cat"><span id="rIcon" style="font-size:24px"></span><span id="rCatName" style="font-size:12px;color:var(--muted);font-weight:600"></span></div>
+    <div class="r-amount" id="rAmt">$0.00</div>
     <div class="r-merchant" id="rMerchant"></div>
     <div class="r-reason" id="rReason"></div>
     <div class="r-grid">
@@ -213,16 +228,17 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
       <div class="rf"><label>费用类别</label><select id="rCatSel"></select></div>
       <div class="rf"><label>日期</label><input id="rDateIn" type="date"></div>
     </div>
-    <div class="rf" style="margin-bottom:10px">
+    <div class="rf" style="margin-bottom:12px">
       <label>描述（填入报销单）</label>
       <input class="ri" id="rDescIn" type="text" placeholder="例：见客户打车 去程xxx" maxlength="80">
     </div>
     <div class="r-actions">
       <button class="rb no" onclick="closeResult()">重拍</button>
-      <button class="rb ok" onclick="confirmEntry()">✓ 保存</button>
+      <button class="rb ok" onclick="confirmEntry()">🦆 保存</button>
     </div>
   </div>
 </div>
+
 <div class="sov" id="detailOv" onclick="closeDetOv(event)">
   <div class="sheet" id="detailSheet"></div>
 </div>
@@ -230,31 +246,51 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   <div class="sheet" id="expSheet"></div>
 </div>
 <div class="toast" id="toast"></div>
+
+<div class="mpicker-ov" id="mpickerOv" onclick="closeMonthPicker(event)">
+  <div class="mpicker">
+    <div class="mpicker-title">🦆 选择月份</div>
+    <div class="mpicker-sub">点击月份直接跳转</div>
+    <div class="mpicker-year">
+      <button onclick="pickerYearChange(-1)">‹</button>
+      <span id="pickerYear"></span>
+      <button onclick="pickerYearChange(1)">›</button>
+    </div>
+    <div class="mpicker-grid" id="pickerGrid"></div>
+    <button class="mpicker-cancel" onclick="closeMonthPicker()">取消</button>
+  </div>
+</div>
+
 <script>
 const CATS=[
-  {emoji:'🍽️',name:'Entertainment',label:'餐饮/招待'},
-  {emoji:'🚕',name:'Travel - National',label:'国内交通'},
-  {emoji:'✈️',name:'Travel - International',label:'国际出行'},
-  {emoji:'🏨',name:'General Expenses',label:'住宿/通用'},
-  {emoji:'📣',name:'Marketing',label:'市场营销'},
-  {emoji:'📦',name:'Freight & Courier',label:'快递/运费'},
-  {emoji:'🖨️',name:'Printing & Stationery',label:'印刷/文具'},
-  {emoji:'📱',name:'Telephone & Internet',label:'电话/网络'},
-  {emoji:'🔧',name:'Repairs and Maintenance',label:'维修保养'},
-  {emoji:'📋',name:'Office Expenses',label:'办公费用'},
-  {emoji:'🎓',name:'Conference & Seminar Expenses',label:'会议/培训'},
-  {emoji:'💰',name:'Advertising',label:'广告'},
-  {emoji:'🛒',name:'Subscriptions',label:'订阅'},
-  {emoji:'❓',name:'General Expenses',label:'其他'},
+  {emoji:'💰',en:'Advertising',zh:'广告费'},
+  {emoji:'🧹',en:'Cleaning',zh:'清洁费'},
+  {emoji:'🍽️',en:'Entertainment',zh:'餐饮/招待'},
+  {emoji:'📦',en:'Freight & Courier',zh:'快递/运费'},
+  {emoji:'🏨',en:'General Expenses',zh:'通用费用'},
+  {emoji:'🛡️',en:'Insurance',zh:'保险'},
+  {emoji:'💳',en:'Interest Expense',zh:'利息支出'},
+  {emoji:'⚖️',en:'Legal expenses',zh:'法律费用'},
+  {emoji:'💡',en:'Light, Power, Heating',zh:'水电费'},
+  {emoji:'🚗',en:'Motor Vehicle Expenses',zh:'车辆费用'},
+  {emoji:'📋',en:'Office Expenses',zh:'办公费用'},
+  {emoji:'🎓',en:'Conference & Seminar Expenses',zh:'会议/培训'},
+  {emoji:'🖨️',en:'Printing & Stationery',zh:'印刷/文具'},
+  {emoji:'🔧',en:'Repairs and Maintenance',zh:'维修保养'},
+  {emoji:'🛒',en:'Subscriptions',zh:'订阅'},
+  {emoji:'📱',en:'Telephone & Internet',zh:'电话/网络'},
+  {emoji:'🚕',en:'Travel - National',zh:'国内交通'},
+  {emoji:'✈️',en:'Travel - International',zh:'国际出行'},
 ];
-document.getElementById('rCatSel').innerHTML=CATS.map(c=>`<option value="${c.name}">${c.emoji} ${c.label}</option>`).join('');
-let entries=JSON.parse(localStorage.getItem('cs_v3')||'[]');
+document.getElementById('rCatSel').innerHTML=CATS.map(c=>`<option value="${c.en}">${c.emoji} ${c.zh}</option>`).join('');
+let entries=JSON.parse(localStorage.getItem('cs_v4')||'[]');
 let curMonth=new Date();
 let pendingB64=null,pendingResult=null;
-function save(){localStorage.setItem('cs_v3',JSON.stringify(entries));}
-function fmt(n){return 'S$'+Math.abs(+n).toFixed(2);}
+function save(){localStorage.setItem('cs_v4',JSON.stringify(entries));}
+function fmt(n){return '$'+Math.abs(+n).toFixed(2);}
 function getMS(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;}
 function getMe(){const ms=getMS(curMonth);return entries.filter(e=>e.date.startsWith(ms));}
+function getCat(en){return CATS.find(c=>c.en===en)||CATS[4];}
 function render(){
   document.getElementById('mLabel').textContent=curMonth.toLocaleDateString('zh-CN',{month:'short',year:'numeric'}).replace(' ','');
   const me=getMe();
@@ -274,18 +310,18 @@ function render(){
     const dt=items.reduce((s,e)=>s+(+e.amount),0);
     const d=new Date(day+'T12:00:00');
     const isToday=day===new Date().toISOString().slice(0,10);
-    const ds=isToday?'今天':d.toLocaleDateString('zh-CN',{month:'long',day:'numeric',weekday:'short'});
+    const ds=isToday?'今天 🦆':d.toLocaleDateString('zh-CN',{month:'long',day:'numeric',weekday:'short'});
     return `<div><div class="day-hdr"><span>${ds}</span><span>${fmt(dt)}</span></div>${items.map(txHTML).join('')}</div>`;
   }).join('');
 }
 function txHTML(e){
-  const cat=CATS.find(c=>c.name===e.cat)||CATS[13];
+  const cat=getCat(e.cat);
   const th=e.thumb?`<img class="tx-thumb" src="${e.thumb}" alt="">`:`<div class="tx-ph">${cat.emoji}</div>`;
   return `<div class="tx" onclick="openDetail('${e.id}')">
     ${th}
     <div class="tx-info">
-      <div class="tx-name">${e.desc||e.merchant||cat.label}</div>
-      <div class="tx-meta"><span class="tag">${cat.emoji} ${cat.label}</span></div>
+      <div class="tx-name">${e.desc||e.merchant||cat.zh}</div>
+      <div class="tx-meta"><span class="tag">${cat.emoji} ${cat.zh}</span></div>
       ${e.merchant&&e.desc?`<div class="tx-note">${e.merchant}</div>`:''}
     </div>
     <div class="tx-r">
@@ -322,7 +358,7 @@ async function startRecognition(){
   if(!pendingB64){toast('⚠️ 请先选择图片');return;}
   document.getElementById('scanOv').classList.remove('open');
   document.getElementById('aiOv').classList.add('open');
-  const msgs=['<b>AI 分析中</b>正在识别收据内容…','<b>AI 分析中</b>提取金额与商家…','<b>AI 分析中</b>匹配华商费用类别…'];
+  const msgs=['<b>AI 分析中 🦆</b>正在识别收据内容…','<b>AI 分析中 🦆</b>提取金额与商家…','<b>AI 分析中 🦆</b>匹配华商费用类别…'];
   let si=0;
   const tick=setInterval(()=>{document.getElementById('aiMsg').innerHTML=msgs[si++%msgs.length];},1400);
   try{
@@ -340,11 +376,11 @@ async function startRecognition(){
 }
 function showResult(r){
   pendingResult=r;
-  const cat=CATS.find(c=>c.name===r.category)||CATS[13];
+  const cat=getCat(r.category);
   document.getElementById('rThumb').src='data:image/jpeg;base64,'+pendingB64;
   document.getElementById('rIcon').textContent=cat.emoji;
-  document.getElementById('rCatName').textContent=cat.label;
-  document.getElementById('rAmt').textContent=r.amount>0?fmt(r.amount):'S$?';
+  document.getElementById('rCatName').textContent=cat.zh;
+  document.getElementById('rAmt').textContent=r.amount>0?fmt(r.amount):'$?';
   document.getElementById('rMerchant').textContent=r.merchant||'';
   document.getElementById('rReason').textContent=r.reason||'';
   document.getElementById('rAmtIn').value=r.amount||'';
@@ -374,25 +410,25 @@ function confirmEntry(){
   const ed=new Date(entry.date+'T12:00:00');
   curMonth=new Date(ed.getFullYear(),ed.getMonth(),1);
   render();
-  const cat=CATS.find(c=>c.name===entry.cat)||CATS[13];
-  toast(`${cat.emoji} 已保存 ${fmt(amount)}`);
+  toast(`🦆 已保存 ${fmt(amount)}`);
 }
 function openDetail(id){
   const e=entries.find(x=>x.id===id);if(!e)return;
-  const cat=CATS.find(c=>c.name===e.cat)||CATS[13];
+  const cat=getCat(e.cat);
   const imgEl=e.thumb?`<div class="det-img"><img src="${e.thumb}" alt=""></div>`:`<div class="det-img">${cat.emoji}</div>`;
   document.getElementById('detailSheet').innerHTML=`
     <div class="handle"></div>${imgEl}
     <div class="det-rows">
-      <div class="det-row"><span class="det-k">金额</span><span class="det-v" style="color:var(--accent);font-family:var(--mono)">${fmt(e.amount)}</span></div>
-      <div class="det-row"><span class="det-k">类别</span><span class="det-v">${cat.emoji} ${cat.label}</span></div>
+      <div class="det-row"><span class="det-k">金额</span><span class="det-v" style="color:var(--accent2);font-family:var(--mono)">${fmt(e.amount)}</span></div>
+      <div class="det-row"><span class="det-k">类别</span><span class="det-v">${cat.emoji} ${cat.zh}</span></div>
       <div class="det-row"><span class="det-k">描述</span><span class="det-v" style="font-size:11px">${e.desc||'—'}</span></div>
       <div class="det-row"><span class="det-k">商家</span><span class="det-v">${e.merchant||'—'}</span></div>
       <div class="det-row"><span class="det-k">发票数</span><span class="det-v">${e.invoices||1} 张</span></div>
       <div class="det-row"><span class="det-k">日期</span><span class="det-v" style="font-family:var(--mono)">${e.date}</span></div>
     </div>
-    <div class="det-acts">
+    <div class="det-acts" style="grid-template-columns:1fr 1fr 1fr">
       <button class="db del" onclick="delEntry('${e.id}')">🗑️ 删除</button>
+      <button class="db cls" onclick="openEdit('${e.id}')">✏️ 编辑</button>
       <button class="db cls" onclick="closeDet()">关闭</button>
     </div>`;
   document.getElementById('detailOv').classList.add('open');
@@ -400,6 +436,40 @@ function openDetail(id){
 function closeDet(){document.getElementById('detailOv').classList.remove('open');}
 function closeDetOv(e){if(e.target===document.getElementById('detailOv'))closeDet();}
 function delEntry(id){entries=entries.filter(x=>x.id!==id);save();render();closeDet();toast('🗑️ 已删除');}
+function openEdit(id){
+  const e=entries.find(x=>x.id===id);if(!e)return;
+  closeDet();
+  const catOpts=CATS.map(c=>`<option value="${c.en}" ${c.en===e.cat?'selected':''}>${c.emoji} ${c.zh}</option>`).join('');
+  document.getElementById('detailSheet').innerHTML=`
+    <div class="handle"></div>
+    <div style="font-size:16px;font-weight:800;margin-bottom:18px;color:var(--text)">✏️ 编辑记录</div>
+    <div class="r-grid">
+      <div class="rf"><label>金额 SGD</label><input id="eAmt" type="number" step="0.01" min="0" value="${e.amount}" inputmode="decimal"></div>
+      <div class="rf"><label>发票张数</label><input id="eInv" type="number" min="1" value="${e.invoices||1}" inputmode="numeric"></div>
+    </div>
+    <div class="r-grid">
+      <div class="rf"><label>费用类别</label><select id="eCat">${catOpts}</select></div>
+      <div class="rf"><label>日期</label><input id="eDate" type="date" value="${e.date}"></div>
+    </div>
+    <div class="rf" style="margin-bottom:10px"><label>描述</label><input class="ri" id="eDesc" type="text" value="${e.desc||''}" maxlength="80"></div>
+    <div class="rf" style="margin-bottom:18px"><label>商家</label><input class="ri" id="eMerchant" type="text" value="${e.merchant||''}" maxlength="40"></div>
+    <div class="r-actions">
+      <button class="rb no" onclick="closeDet()">取消</button>
+      <button class="rb ok" onclick="saveEdit('${e.id}')">🦆 保存</button>
+    </div>`;
+  document.getElementById('detailOv').classList.add('open');
+}
+function saveEdit(id){
+  const e=entries.find(x=>x.id===id);if(!e)return;
+  const amount=parseFloat(document.getElementById('eAmt').value);
+  if(!amount||amount<=0){toast('⚠️ 请填写金额');return;}
+  e.amount=amount;e.cat=document.getElementById('eCat').value;
+  e.date=document.getElementById('eDate').value;
+  e.desc=document.getElementById('eDesc').value.trim();
+  e.merchant=document.getElementById('eMerchant').value.trim();
+  e.invoices=parseInt(document.getElementById('eInv').value)||1;
+  save();render();closeDet();toast('🦆 已更新');
+}
 function openExport(){
   const me=getMe().sort((a,b)=>a.date.localeCompare(b.date));
   const total=me.reduce((s,e)=>s+(+e.amount),0);
@@ -407,111 +477,111 @@ function openExport(){
   let html=`<div class="handle"></div>
     <div class="exp-title">📋 ${monthName}报销单</div>
     <div class="exp-sub">${me.length} 笔 · 合计 ${fmt(total)}</div>`;
-  if(!me.length){html+='<div style="color:var(--muted);font-size:13px;text-align:center;padding:28px 0">本月暂无报销记录</div>';}
+  if(!me.length){html+='<div style="text-align:center;padding:32px 0;font-size:32px">🦆<br><span style="font-size:13px;color:var(--muted)">本月暂无记录</span></div>';}
   else{
     html+=me.map(e=>{
-      const cat=CATS.find(c=>c.name===e.cat)||CATS[13];
+      const cat=getCat(e.cat);
       return `<div class="exp-item">
-        <div class="exp-il"><span style="font-size:15px;flex-shrink:0">${cat.emoji}</span>
-          <div style="min-width:0"><div class="exp-name">${e.desc||e.merchant||cat.label}</div>
-          <div class="exp-sub2">${e.date} · ${cat.label} · ${e.invoices||1}张</div></div></div>
-        <div class="exp-a">${fmt(e.amount)}</div></div>`;
+        <div class="exp-il"><span style="font-size:16px;flex-shrink:0">${cat.emoji}</span>
+          <div style="min-width:0">
+            <div class="exp-name">${e.desc||e.merchant||cat.zh}</div>
+            <div class="exp-sub2">${e.date} · ${cat.zh} · ${e.invoices||1}张</div>
+          </div>
+        </div>
+        <div class="exp-a">${fmt(e.amount)}</div>
+      </div>`;
     }).join('');
-    html+=`<div class="exp-total"><span class="exp-tl">合计</span><span class="exp-ta">${fmt(total)}</span></div>`;
+    html+=`<div class="exp-total"><span class="exp-tl">合计 🦆</span><span class="exp-ta">${fmt(total)}</span></div>`;
   }
   html+=`<div class="exp-btns">
-    <button class="eb pdf" onclick="exportPDF()">⬇️ 导出华商报销单 PDF</button>
+    <button class="eb excel" onclick="exportExcel()">⬇️ 导出华商报销单 (.xlsx)</button>
     <button class="eb copy" onclick="copyText()">📄 复制文字版</button>
   </div>`;
   document.getElementById('expSheet').innerHTML=html;
   document.getElementById('expOv').classList.add('open');
 }
 function closeExpOv(e){if(e.target===document.getElementById('expOv'))document.getElementById('expOv').classList.remove('open');}
-function exportPDF(){
+function exportExcel(){
   const me=getMe().sort((a,b)=>a.date.localeCompare(b.date));
   const today=new Date();
   const todayStr=`${today.getFullYear()}/${today.getMonth()+1}/${today.getDate()}`;
   const ms=getMS(curMonth);
-  const total=me.reduce((s,e)=>s+(+e.amount),0);
-  const {jsPDF}=window.jspdf;
-  const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
-  const PW=297,PH=210,ML=14,MR=14,TW=PW-ML-MR;
-  const C={
-    date:{x:ML,w:22},desc:{x:ML+22,w:62},inv:{x:ML+84,w:14},
-    cat:{x:ML+98,w:38},cur:{x:ML+136,w:16},amt:{x:ML+152,w:20},
-    gst:{x:ML+172,w:22},total:{x:ML+194,w:20},remark:{x:ML+214,w:TW-214}
-  };
-  let y=12;
-  doc.setFont('helvetica','bold');doc.setFontSize(12);doc.setTextColor(0,0,0);
-  doc.text('EXPENSE CLAIM FORM',PW/2,y,{align:'center'});y+=8;
-  doc.setFontSize(8);doc.setFont('helvetica','normal');
-  doc.setTextColor(100,100,100);doc.text('Company:',ML,y);
-  doc.setTextColor(0,0,0);doc.text('Singapore Huashang Liquor Pte Ltd',ML+18,y);y+=4.5;
-  doc.setTextColor(100,100,100);doc.text('Employee:',ML,y);
-  doc.setTextColor(0,0,0);doc.text('GAGA',ML+18,y);y+=4.5;
-  doc.setTextColor(100,100,100);doc.text('Date:',ML,y);
-  doc.setTextColor(0,0,0);doc.text(todayStr,ML+18,y);y+=5;
-  const HDR_H=7;
-  doc.setFillColor(41,98,170);doc.rect(ML,y,TW,HDR_H,'F');
-  doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(7);
-  [{label:'Date',x:C.date.x,w:C.date.w},{label:'Description',x:C.desc.x,w:C.desc.w},
-   {label:'Invoice',x:C.inv.x,w:C.inv.w},{label:'EXP Category',x:C.cat.x,w:C.cat.w},
-   {label:'Currency',x:C.cur.x,w:C.cur.w},{label:'Amount',x:C.amt.x,w:C.amt.w},
-   {label:'Allowed\nGST-Input',x:C.gst.x,w:C.gst.w},{label:'TOTAL',x:C.total.x,w:C.total.w},
-   {label:'REMARK',x:C.remark.x,w:C.remark.w}
-  ].forEach(h=>{
-    if(h.label.includes('\n')){const p=h.label.split('\n');doc.text(p[0],h.x+h.w/2,y+3,{align:'center'});doc.text(p[1],h.x+h.w/2,y+5.5,{align:'center'});}
-    else doc.text(h.label,h.x+h.w/2,y+4.5,{align:'center'});
-  });
-  y+=HDR_H;
-  doc.setFont('helvetica','normal');doc.setFontSize(7.5);
-  const ROW_H=16;
+  const monthEn=curMonth.toLocaleDateString('en-US',{month:'short',year:'2-digit'});
+  const wb=XLSX.utils.book_new();
+  const ws={};
+  const range={s:{r:1,c:1},e:{r:1,c:1}};
+  function sc(r,c,v,f){
+    const addr=XLSX.utils.encode_cell({r,c});
+    ws[addr]=f?{f,t:'n'}:{v,t:typeof v==='number'?'n':'s'};
+    if(r<range.s.r)range.s.r=r;if(c<range.s.c)range.s.c=c;
+    if(r>range.e.r)range.e.r=r;if(c>range.e.c)range.e.c=c;
+  }
+  sc(1,1,'EXPENSE CLAIM FORM');
+  sc(3,1,'Company: ');sc(3,3,'Singapore Huashang Liquor Pte Ltd');
+  sc(4,1,'Employee: ');sc(4,3,'GAGA');
+  sc(5,1,'Date: ');sc(5,3,todayStr);
+  sc(6,1,'Date');sc(6,3,'Description');sc(6,4,'Invoice');
+  sc(6,5,'EXP Category');sc(6,6,'Currency');sc(6,7,'Amount');
+  sc(6,8,'Allowed\n GST-Input');sc(6,9,'TOTAL');sc(6,10,'REMARK');
+  const dataStart=7;
   me.forEach((e,i)=>{
-    if(y+ROW_H>PH-14){doc.addPage();y=14;}
+    const r=dataStart+i;
     const d=new Date(e.date+'T12:00:00');
-    const dateStr=`${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()}`;
-    doc.setFillColor(...(i%2===0?[255,255,255]:[248,250,253]));
-    doc.rect(ML,y,TW,ROW_H,'F');
-    doc.setDrawColor(210,215,225);doc.setLineWidth(0.15);doc.rect(ML,y,TW,ROW_H,'S');
-    [C.desc.x,C.inv.x,C.cat.x,C.cur.x,C.amt.x,C.gst.x,C.total.x,C.remark.x].forEach(cx=>doc.line(cx,y,cx,y+ROW_H));
-    const cy=y+ROW_H/2+1.5;
-    doc.setTextColor(0,0,0);
-    doc.text(dateStr,C.date.x+C.date.w/2,cy,{align:'center'});
-    doc.text(doc.splitTextToSize(e.desc||e.merchant||e.cat,C.desc.w-2),C.desc.x+1,y+4);
-    doc.text(String(e.invoices||1),C.inv.x+C.inv.w/2,cy,{align:'center'});
-    doc.setTextColor(41,98,170);
-    doc.text(doc.splitTextToSize(e.cat,C.cat.w-2),C.cat.x+1,y+4);
-    doc.setTextColor(0,0,0);
-    doc.text('SGD',C.cur.x+C.cur.w/2,cy,{align:'center'});
-    doc.text((+e.amount).toFixed(2),C.amt.x+C.amt.w-1,cy,{align:'right'});
-    doc.setTextColor(100,100,100);doc.text('-',C.gst.x+C.gst.w/2,cy,{align:'center'});
-    doc.setTextColor(0,0,0);
-    doc.text((+e.amount).toFixed(2),C.total.x+C.total.w-1,cy,{align:'right'});
-    if(e.thumb){try{doc.addImage(e.thumb,'JPEG',C.remark.x+1,y+1,C.remark.w-2,ROW_H-2);}catch(ex){}}
-    y+=ROW_H;
+    sc(r,1,`${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()}`);
+    sc(r,3,e.desc||e.merchant||'');
+    sc(r,4,e.invoices||1);
+    sc(r,5,e.cat);
+    sc(r,6,'SGD');
+    sc(r,7,+e.amount);
+    sc(r,8,0);
+    const hA=XLSX.utils.encode_cell({r,c:7});
+    const iA=XLSX.utils.encode_cell({r,c:8});
+    sc(r,9,null,`${hA}+${iA}`);
   });
-  if(y+8>PH-14){doc.addPage();y=14;}
-  doc.setFillColor(240,244,255);doc.rect(ML,y,TW,8,'F');
-  doc.setDrawColor(41,98,170);doc.setLineWidth(0.4);doc.rect(ML,y,TW,8,'S');
-  doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(0,0,0);
-  doc.text(`$${total.toFixed(2)}`,C.amt.x+C.amt.w-1,y+5.5,{align:'right'});
-  doc.setTextColor(100,100,100);doc.text('$ -',C.gst.x+C.gst.w/2,y+5.5,{align:'center'});
-  doc.setTextColor(0,0,0);doc.text(`$${total.toFixed(2)}`,C.total.x+C.total.w-1,y+5.5,{align:'right'});
-  doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(160,160,160);
-  doc.text(`Singapore Huashang Liquor Pte Ltd · ${ms} Expense Claim`,PW/2,PH-4,{align:'center'});
-  doc.save(`Huashang_Expense_Claim_of_GAGA_${ms}.pdf`);
-  toast('✅ PDF 已下载');
+  const bufR=dataStart+me.length;
+  sc(bufR,8,null,`H${bufR+1}*0.09`);
+  const totR=bufR+1;
+  sc(totR,7,null,`SUM(H${dataStart+1}:H${bufR+1})`);
+  sc(totR,8,null,`SUM(I${dataStart+1}:I${bufR+1})`);
+  sc(totR,9,null,`SUM(J${dataStart+1}:J${bufR+1})`);
+  ws['!ref']=XLSX.utils.encode_range(range);
+  ws['!cols']=[{wch:1},{wch:11},{wch:1},{wch:39},{wch:6},{wch:19},{wch:8},{wch:9},{wch:9},{wch:9},{wch:24}];
+  ws['!rows']=[{},{hpt:17.6},{},{hpt:20},{hpt:20},{hpt:20},{hpt:25},...me.map(()=>({hpt:70})),{hpt:15},{hpt:15}];
+  ws['!merges']=[{s:{r:1,c:1},e:{r:1,c:9}}];
+  XLSX.utils.book_append_sheet(wb,ws,`HSL ${monthEn}`);
+  const catData=[['No.','EXP Category','Description'],[1,'Advertising','Expenses incurred for advertising while trying to increase sales'],[2,'Cleaning','Expenses incurred for cleaning business property.'],[3,'Entertainment','Expenses paid by company for the business but are not deductable for income tax purposes.'],[4,'Freight & Courier','Expenses incurred on courier & freight costs'],[5,'General Expenses','General expenses related to the running of the business.'],[6,'Insurance','Expenses incurred for insuring the business assets'],[7,'Interest Expense','Any interest expenses paid to your tax authority, business bank accounts or credit card accounts.'],[8,'Legal expenses','Expenses incurred on any legal matters'],[9,'Light, Power, Heating','Expenses incurred for lighting, powering or heating the premises'],[10,'Motor Vehicle Expenses','Expenses incurred on the running of company motor vehicles'],[11,'Office Expenses','General expenses related to the running of the business office.'],[12,'Conference & Seminar Expenses','Expenses incurred on the participation in conferences and seminars'],[13,'Printing & Stationery','Expenses incurred by the entity as a result of printing and stationery'],[14,'Repairs and Maintenance','Expenses incurred on a damaged or run down asset that will bring the asset back to its original condition'],[15,'Subscriptions','E.g. Magazines, professional bodies'],[16,'Telephone & Internet','Expenditure incurred from any business-related phone calls, phone lines, or internet connections'],[17,'Travel - National','Expenses incurred from domestic travel which has a business purpose'],[18,'Travel - International','Expenses incurred from international travel which has a business purpose']];
+  const wsCat=XLSX.utils.aoa_to_sheet(catData);
+  wsCat['!cols']=[{wch:5},{wch:30},{wch:80}];
+  XLSX.utils.book_append_sheet(wb,wsCat,'EXP Category');
+  XLSX.writeFile(wb,`Huashang_Expense_Claim_of_GAGA_${ms}.xlsx`);
+  toast('🦆 Excel 已下载！');
 }
 function copyText(){
   const me=getMe().sort((a,b)=>a.date.localeCompare(b.date));
   const label=curMonth.toLocaleDateString('zh-CN',{year:'numeric',month:'long'});
   const total=me.reduce((s,e)=>s+(+e.amount),0);
   let txt=`华商报销单 · ${label}\n员工：GAGA\n${'─'.repeat(34)}\n`;
-  me.forEach(e=>{txt+=`${e.date}  ${(e.desc||e.merchant||'').slice(0,18).padEnd(18)}  ${e.cat.slice(0,16).padEnd(16)}  S$${(+e.amount).toFixed(2)}\n`;});
+  me.forEach(e=>{const cat=getCat(e.cat);txt+=`${e.date}  ${(e.desc||e.merchant||'').slice(0,18).padEnd(18)}  ${cat.en.slice(0,16).padEnd(16)}  S$${(+e.amount).toFixed(2)}\n`;});
   txt+=`${'─'.repeat(34)}\n合计：S$${total.toFixed(2)}`;
   navigator.clipboard.writeText(txt).then(()=>toast('📋 已复制'));
 }
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2400);}
+let pickerYear=new Date().getFullYear();
+function openMonthPicker(){pickerYear=curMonth.getFullYear();renderPicker();document.getElementById('mpickerOv').classList.add('open');}
+function closeMonthPicker(e){if(!e||e.target===document.getElementById('mpickerOv'))document.getElementById('mpickerOv').classList.remove('open');}
+function pickerYearChange(d){pickerYear+=d;renderPicker();}
+function renderPicker(){
+  document.getElementById('pickerYear').textContent=pickerYear;
+  const months=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  const withData=new Set(entries.map(e=>e.date.slice(0,7)));
+  document.getElementById('pickerGrid').innerHTML=months.map((m,i)=>{
+    const ms=`${pickerYear}-${String(i+1).padStart(2,'0')}`;
+    const isActive=curMonth.getFullYear()===pickerYear&&curMonth.getMonth()===i;
+    const hasData=withData.has(ms);
+    return `<div class="mpicker-m ${isActive?'active':''} ${hasData&&!isActive?'has-data':''}" onclick="selectMonth(${i})">${m}</div>`;
+  }).join('');
+}
+function selectMonth(m){curMonth=new Date(pickerYear,m,1);render();document.getElementById('mpickerOv').classList.remove('open');}
 render();
 </script>
 </body>
